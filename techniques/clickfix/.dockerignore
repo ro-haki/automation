@@ -1,0 +1,29 @@
+# Node modules and build artifacts
+node_modules
+dist
+build
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Git and version control
+.git
+.gitignore
+
+# Environment and config
+.env
+.env.local
+
+# Docker-specific
+Dockerfile
+docker-compose.yml
+
+# Temporary files
+*.swp
+*.tmp
+*.bak

