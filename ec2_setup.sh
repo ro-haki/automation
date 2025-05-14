@@ -1,7 +1,7 @@
 sudo apt-get update
 
-# install git
-sudo apt-get install git tree -y
+# install usefull tools
+sudo apt-get install git tree net-tools -y
 
 # Add Docker's official GPG key:
 sudo apt-get install ca-certificates curl -y
@@ -18,7 +18,16 @@ sudo apt-get update
 
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
+# set up docker compose
+sudo apt-get install docker-compose-plugin -y
+
 # set up user
 sudo groupadd docker
 sudo usermod -aG docker $USER
 echo "Relogin to be able to run docker without sudo"
+
+# create .env
+cp env.example .env
+
+# build containers
+docker compose build
