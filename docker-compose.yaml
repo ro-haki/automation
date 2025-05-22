@@ -1,10 +1,10 @@
 services:
 
-  ######  SERVER  ######
+  ######  SERVERS ######
 
   reverse-ssh:
     build:
-      context: reverse_ssh
+      context: ${SERVER_WORKSPACE}
     container_name: reverse-ssh
     env_file:
       - .env
@@ -16,9 +16,24 @@ services:
       - reverse_ssh_data:/data
       - ${SERVER_WORKSPACE}/ssh_keys:/ssh_keys
 
+
+  nc:
+    build:
+      context: ${NC_WORKSPACE}
+    container_name: nc
+    stdin_open: true
+    tty: true
+    env_file:
+      - .env
+    ports:
+      - ${NC_LISTEN_PORT}:4444
+    
+
+  ######  GENERATORS  ######
+
   generator-reverse-ssh:
     build:
-      context: reverse_ssh/generator
+      context: ${SERVER_WORKSPACE}/generator
     container_name: generator-reverse-ssh
     env_file:
       - .env
@@ -32,7 +47,7 @@ services:
 
   powershell-generator:
     build:
-      context: powershell_generator
+      context: ${POWERSHELL_GENERATOR}
     container_name: powershell-generator
     env_file:
       - .env
@@ -40,6 +55,18 @@ services:
       - ${POWERSHELL_GENERATOR}/templates:/templates
       - ${POWERSHELL_GENERATOR}/public:/public
       - powerhsell_scripts:/powerhsell_scripts
+
+  rshell-generator:
+    build:
+      context: ${RSHELL_WORKSPACE}
+    container_name: rshell-generator
+    stdin_open: true
+    tty: true
+    env_file:
+      - .env
+    volumes:
+      - shells_and_executions:/shells_and_executions
+      - ${RSHELL_WORKSPACE}/rshell:/rshell
 
   ######  SHARE  ######
 

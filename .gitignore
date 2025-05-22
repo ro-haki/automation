@@ -1,6 +1,10 @@
+
+# MY OWN set up
 reverse_ssh/ssh_keys/*
 .env
 
+
+############################# start for DOTNET #############################
 ## Build results
 bin/
 obj/
@@ -82,3 +86,6 @@ TestResults/
 bin/
 obj/
 publish/
+
+
+############################# finish for DOTNET #############################
