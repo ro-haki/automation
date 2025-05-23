@@ -1,7 +1,7 @@
 sudo apt-get update
 
 # install usefull tools
-sudo apt-get install git tree net-tools htop -y
+sudo apt-get install git tree net-tools tmux htop -y
 
 # Add Docker's official GPG key:
 sudo apt-get install ca-certificates curl -y

