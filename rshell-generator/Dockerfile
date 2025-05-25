@@ -23,8 +23,8 @@ RUN wget https://packages.microsoft.com/config/debian/11/packages-microsoft-prod
 
 RUN apt-get update && apt-get install -y dotnet-sdk-8.0
 
+COPY rshell /rshell
 WORKDIR /rshell
-ADD rshell .
 
 VOLUME /shells_and_executions
 

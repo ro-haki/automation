@@ -27,6 +27,18 @@ services:
       - .env
     ports:
       - ${NC_LISTEN_PORT}:4444
+
+  villain:
+    build:
+      context: ${VILLAIN_WORKSPACE}
+    container_name: villain
+    stdin_open: true
+    tty: true
+    env_file:
+      - .env
+    ports:
+      - ${VILLAIN_LISTEN_PORT}:4444
+
     
 
   ######  GENERATORS  ######

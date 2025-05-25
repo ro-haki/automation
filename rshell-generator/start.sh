@@ -1,9 +1,6 @@
 #!/bin/bash
 set -e
 
-echo 'test'
-echo $(pwd)
-
 shells_and_executions="/shells_and_executions"
 
 cat > ./Config.cs <<EOL
